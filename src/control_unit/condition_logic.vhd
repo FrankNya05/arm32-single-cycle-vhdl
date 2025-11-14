@@ -38,7 +38,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity condition_logic is
   Port ( 
-    PCs, RegW, MemW, clk, reset: in STD_LOGIC;
+    PCs, RegW, MemW, nowrite, clk, reset: in STD_LOGIC;
     Flagw: in STD_LOGIC_VECTOR(1 downto 0);
     cond, ALU_FLAGS: in STD_LOGIC_VECTOR(3 downto 0);
     PCsrc, Regwrite, Memwrite: out STD_LOGIC
@@ -75,7 +75,7 @@ begin
 
     -- Logique conditionnel pour decider ou non la mise à jour du PC, l'Ecriture dans les registres ou la memoire
     PCsrc<= PCs and condex;
-    Regwrite<= Regw and condex;
+    Regwrite<= Regw and condex and not((nowrite));
     Memwrite<= Memw and condex;
     
 end Structural;

@@ -51,7 +51,7 @@ entity control_unit is
 end control_unit;
 
 architecture Structural of control_unit is
-    signal branchi, regwi, memwi, PCsi, ALUop: STD_LOGIC;
+    signal branchi, regwi, memwi, PCsi, ALUop, nowritei: STD_LOGIC;
     signal Flagwi: STD_LOGIC_VECTOR(1 downto 0);
     
 begin    
@@ -78,6 +78,7 @@ begin
             funct0=> Funct(0),
             ALUop=> ALUop,
             ALUcontrol=> ALUcontrol,
+            nowrite=> nowritei,
             Flagw=> Flagwi
         );
         
@@ -91,6 +92,7 @@ begin
             cond=> cond,
             ALU_FLAGS=> ALU_Flags,
             Flagw=> Flagwi,
+            nowrite=> nowritei,
             Regw=> Regwi,
             Memw=> Memwi,
             PCs=> PCsi,

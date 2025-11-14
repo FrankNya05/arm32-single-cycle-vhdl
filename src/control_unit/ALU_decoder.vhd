@@ -40,6 +40,7 @@ entity ALU_decoder is
   Port (
         funct41: in STD_LOGIC_VECTOR(3 downto 0);
         funct0, ALUop: in STD_LOGIC;  
+        nowrite: out STD_LOGIC; -- Prevent writing the register during cmp
         ALUcontrol, Flagw: out STD_LOGIC_VECTOR(1 downto 0)
    );
 end ALU_decoder;
@@ -49,6 +50,7 @@ architecture ALU_decoder_Behavioral of ALU_decoder is
 begin
 
     process(funct0, ALUop, funct41) begin
+        nowrite<= '0';
         -- Pas de traitement de données
         if ALUop = '0' then
             ALUcontrol<= "00";
@@ -92,6 +94,17 @@ begin
                 else
                     Flagw<= "10";
                 end if; 
+                
+                --CMP
+                when "1010" =>
+                ALUcontrol<= "01";
+                if funct0 = '1' then  
+                    Flagw<= "11";
+                    nowrite<= '1';
+                else
+                    Flagw<= "00";
+                    nowrite<= '1';
+                end if;
                 
                 when others =>
                 ALUcontrol<= "00";
