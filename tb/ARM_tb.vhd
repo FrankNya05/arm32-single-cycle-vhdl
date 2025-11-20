@@ -81,15 +81,15 @@ begin
               readline(tv, L);
           
               -- lecture sequentielle des champs separes par '_'
-              read(L, ExpectedALUResult_v);
-              read(L, dummy);
               read(L, ExpectedData_v);
+              read(L, dummy);
+              read(L, ExpectedALUResult_v);
               
               wait until rising_edge(clk_tb); -- Lecture des signaux à chaque front montant de l'horloge
               
               -- Appliquer les entrées des signaux
               ExpectedALUResult<= ExpectedALUResult_v;
-              ExpectedData<= ExpectedData_v;
+             -- ExpectedData<= ExpectedData_v;
                
               
           end loop;

@@ -52,6 +52,7 @@ architecture Data_path_Structural of Data_path is
     signal RA1, RA2, A3: STD_LOGIC_VECTOR(3 downto 0);
     signal entre_extend: STD_LOGIC_VECTOR(23 downto 0);
     signal WD3, extimm, SrcA, srcB, RD2, ALU_Result, WD, Read_Data, sortie: STD_LOGIC_VECTOR(31 downto 0);
+    signal RD2is, RD2os: STD_LOGIC_VECTOR(31 downto 0); -- Signaux d'entree et de sortie du barrel shifter
     signal V, C, N, Z: STD_LOGIC;
 
 begin
@@ -75,6 +76,8 @@ begin
        RD2=> RD2
     );
     
+    --RD2is <= RD2;
+    
     entre_extend <= instr(23 downto 0); -- Entree du bloc extend
     -- Instance du module Extend
     ext_mod: entity work.extend
@@ -84,7 +87,15 @@ begin
             extimm=> extimm
         );
         
-    SrcB<= RD2 when ALU_src= '0' else extimm; -- Choix de la donnée à envoyer au signal srcB
+    -- Instance du barrel shifter
+        B_Shift: entity work.barrel_shifter
+            port map(
+                RD2 => RD2,
+                shift_info => instr(11 downto 5),
+                RD2s => RD2os 
+            );
+            
+    SrcB<= RD2os when ALU_src= '0' else extimm; -- Choix de la donnée à envoyer au signal srcB
     
     -- Instance de l'ALU
     ALU: entity work.ALU_FLAGS
@@ -99,6 +110,7 @@ begin
             result=> ALU_Result,
             ALU_FLAGS=> ALU_FLAGSo
         );
+        
         
     -- Instance de la memoire de donnée
     Mem_data: entity work.Data_memory
